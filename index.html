@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central Polytechnic College - Complaint Portal</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    background:url('college.jpg') no-repeat center center/cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.overlay{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.65);
+}
+
+.card{
+    position:relative;
+    background:white;
+    padding:25px;
+    width:90%;
+    max-width:400px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    z-index:2;
+}
+
+h2{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.college-name{
+    text-align:center;
+    font-size:14px;
+    color:#555;
+    margin-bottom:15px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+textarea{
+    height:80px;
+    resize:none;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    border:none;
+    border-radius:6px;
+    background:#003366;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#001f4d;
+}
+
+.hidden{
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<!-- LOGIN PAGE -->
+<div class="card" id="loginPage">
+    <h2>Student Login</h2>
+    <div class="college-name">
+        Central Polytechnic College, TVM
+    </div>
+
+    <input type="text" id="regno" placeholder="Register Number">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+</div>
+
+<!-- COMPLAINT PAGE -->
+<div class="card hidden" id="complaintPage">
+    <h2>Submit Complaint</h2>
+    <div class="college-name">
+        Central Polytechnic College, TVM
+    </div>
+
+    <select id="problem">
+        <option value="">Select Problem</option>
+        <option>Bus Issue</option>
+        <option>Classroom Problem</option>
+        <option>Faculty Complaint</option>
+        <option>Hostel Issue</option>
+        <option>Other</option>
+    </select>
+
+    <textarea id="description" placeholder="Describe your problem"></textarea>
+
+    <button onclick="submitComplaint()">Submit Complaint</button>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+function login(){
+    var regno = document.getElementById("regno").value;
+    var pass = document.getElementById("password").value;
+
+    if(regno === "" || pass === ""){
+        alert("Please enter Register Number and Password");
+        return;
+    }
+
+    if(pass === "1234"){
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("complaintPage").classList.remove("hidden");
+    } else {
+        alert("Wrong Password (Use 1234 for demo)");
+    }
+}
+
+function submitComplaint(){
+    var regno = document.getElementById("regno").value;
+    var problem = document.getElementById("problem").value;
+    var description = document.getElementById("description").value;
+
+    if(problem === "" || description === ""){
+        alert("Please fill all fields");
+        return;
+    }
+
+    var complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+    complaints.push({
+        regno: regno,
+        problem: problem,
+        description: description,
+        date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("complaints", JSON.stringify(complaints));
+
+    alert("Complaint Submitted Successfully!");
+
+    document.getElementById("problem").value="";
+    document.getElementById("description").value="";
+}
+
+function logout(){
+    document.getElementById("complaintPage").classList.add("hidden");
+    document.getElementById("loginPage").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
