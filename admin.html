@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Central Polytechnic College</title>
+
+<style>
+body{
+    font-family:Arial;
+    margin:0;
+    padding:20px;
+    background:#f4f6f9;
+}
+h2{
+    text-align:center;
+}
+.college{
+    text-align:center;
+    margin-bottom:20px;
+    color:#555;
+}
+.dashboard{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+.count{
+    font-size:18px;
+    margin-bottom:15px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+th,td{
+    padding:10px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+th{
+    background:#0052cc;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Admin Dashboard</h2>
+<div class="college">Central Polytechnic College, TVM</div>
+
+<div class="dashboard">
+<div class="count">
+Total Complaints: <strong><span id="count">0</span></strong>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Register No</th>
+<th>Problem</th>
+<th>Description</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody id="tableData"></tbody>
+</table>
+</div>
+
+<script>
+var complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+document.getElementById("count").innerText = complaints.length;
+
+var table = document.getElementById("tableData");
+
+complaints.forEach(function(c){
+    table.innerHTML += `
+        <tr>
+            <td>${c.regno}</td>
+            <td>${c.problem}</td>
+            <td>${c.description}</td>
+            <td>${c.date}</td>
+        </tr>
+    `;
+});
+</script>
+
+</body>
+</html>
