@@ -2,44 +2,70 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard - Central Polytechnic College</title>
+<title>Admin Panel - Central Polytechnic College</title>
 
 <style>
 body{
-    font-family:Arial;
     margin:0;
     padding:20px;
+    font-family:Arial;
     background:#f4f6f9;
 }
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    max-width:500px;
+    margin:auto;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
 h2{
     text-align:center;
 }
-.college{
-    text-align:center;
-    margin-bottom:20px;
-    color:#555;
+
+input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
 }
-.dashboard{
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+button{
+    width:100%;
+    padding:10px;
+    background:#003366;
+    color:white;
+    border:none;
+    cursor:pointer;
 }
-.count{
-    font-size:18px;
-    margin-bottom:15px;
+
+button:hover{
+    background:#001f4d;
 }
+
+.hidden{
+    display:none;
+}
+
+.logout{
+    background:red;
+    margin-top:10px;
+}
+
 table{
     width:100%;
     border-collapse:collapse;
+    margin-top:15px;
 }
+
 th,td{
-    padding:10px;
-    border:1px solid #ddd;
-    text-align:left;
+    border:1px solid #ccc;
+    padding:8px;
 }
+
 th{
-    background:#0052cc;
+    background:#003366;
     color:white;
 }
 </style>
@@ -47,13 +73,23 @@ th{
 
 <body>
 
-<h2>Admin Dashboard</h2>
-<div class="college">Central Polytechnic College, TVM</div>
+<!-- ADMIN LOGIN -->
+<div class="card" id="loginPage">
+<h2>Admin Login</h2>
 
-<div class="dashboard">
-<div class="count">
-Total Complaints: <strong><span id="count">0</span></strong>
+<input type="text" id="adminUser" placeholder="Username">
+<input type="password" id="adminPass" placeholder="Password">
+
+<button onclick="adminLogin()">Login</button>
 </div>
+
+<!-- DASHBOARD -->
+<div class="card hidden" id="dashboard">
+
+<h2>Admin Dashboard</h2>
+<p><strong>Central Polytechnic College, TVM</strong></p>
+
+<p>Total Complaints: <span id="count">0</span></p>
 
 <table>
 <thead>
@@ -66,25 +102,51 @@ Total Complaints: <strong><span id="count">0</span></strong>
 </thead>
 <tbody id="tableData"></tbody>
 </table>
+
+<button class="logout" onclick="logout()">Logout</button>
+
 </div>
 
 <script>
-var complaints = JSON.parse(localStorage.getItem("complaints")) || [];
 
-document.getElementById("count").innerText = complaints.length;
+function adminLogin(){
+    var user = document.getElementById("adminUser").value;
+    var pass = document.getElementById("adminPass").value;
 
-var table = document.getElementById("tableData");
+    // Change these if you want
+    if(user === "admin" && pass === "cpc123"){
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        loadComplaints();
+    } else {
+        alert("Wrong Username or Password");
+    }
+}
 
-complaints.forEach(function(c){
-    table.innerHTML += `
+function loadComplaints(){
+    var complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+    document.getElementById("count").innerText = complaints.length;
+
+    var table = document.getElementById("tableData");
+    table.innerHTML = "";
+
+    complaints.forEach(function(c){
+        table.innerHTML += `
         <tr>
             <td>${c.regno}</td>
             <td>${c.problem}</td>
             <td>${c.description}</td>
             <td>${c.date}</td>
         </tr>
-    `;
-});
+        `;
+    });
+}
+
+function logout(){
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("loginPage").classList.remove("hidden");
+}
 </script>
 
 </body>
